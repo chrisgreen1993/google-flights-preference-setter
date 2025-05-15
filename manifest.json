@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Google Flights Preference Setter",
+  "version": "1.0",
+  "description": "A Chrome extension to set currency preferences on Google Flights.",
+  "permissions": ["tabs", "storage"],
+  "host_permissions": ["*://www.google.com/travel/flights*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Google Flights Preference Setter",
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["currencies.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

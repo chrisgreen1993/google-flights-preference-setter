@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Flights Preference Setter</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <h1 class="header">Google Flights Preference Setter</h1>
+
+  <div class="currency-picker">
+    <label class="currency-search-label" for="currency-search">Currency:</label>
+    <input 
+      type="text" 
+      id="currency-search" 
+      placeholder="Search currency..." 
+      autocomplete="off" 
+      class="currency-search"
+    />
+    <ul id="currency-list" class="currency-list"></ul>
+    <button id="save-button" class="button">Save</button>
+  </div>
+
+  <template id="currency-item-template">
+    <li class="currency-item" data-code="">
+      <span class="currency-name"></span>
+      (<span class="currency-code"></span>)
+    </li>
+  </template>
+
+ 
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
