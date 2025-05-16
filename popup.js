@@ -126,11 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     await chrome.storage.sync.set({ preferences });
 
-    const tabs = await chrome.tabs.query({});
-    tabs.forEach(tab => {
-      if (tab.url?.startsWith('https://www.google.com/travel/flights')) {
-        chrome.tabs.reload(tab.id);
-      }
-    });
+    window.close();
+
   });
 });

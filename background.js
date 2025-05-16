@@ -1,31 +1,30 @@
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  if (
-    changeInfo.status === 'complete' &&
-    tab.url?.startsWith('https://www.google.com/travel/flights')
-  ) {
-    const { preferences } = await chrome.storage.sync.get('preferences');
-    const { currency = 'USD', language = 'en-US', location = 'US' } = preferences;
+chrome.storage.onChanged.addListener(async (changes, namespace) => {
+  if (namespace !== 'sync' || !changes.preferences) return;
+  
+  const { preferences } = changes;
+  const { currency = 'USD', language = 'en-US', location = 'US' } = preferences.newValue;
 
-    const url = new URL(tab.url);
-    let shouldUpdate = false;
-
-    if (url.searchParams.get('curr') !== currency) {
-      url.searchParams.set('curr', currency);
-      shouldUpdate = true;
-    }
-
-    if (url.searchParams.get('hl') !== language) {
-      url.searchParams.set('hl', language);
-      shouldUpdate = true;
-    }
-
-    if (url.searchParams.get('gl') !== location) {
-      url.searchParams.set('gl', location);
-      shouldUpdate = true;
-    }
-
-    if (shouldUpdate) {
-      await chrome.tabs.update(tabId, { url: url.toString() });
-    }
+  const queryParamMappings = {
+    curr: currency,
+    hl: language,
+    gl: location
   }
+
+  const tabs = await chrome.tabs.query({
+    url: 'https://www.google.com/travel/flights*'
+  });
+
+  tabs.forEach(async (tab) => {
+    const url = new URL(tab.url);
+
+    const hasChanges = Object.entries(queryParamMappings).some(([param, value]) => url.searchParams.get(param) !== value);
+
+    if (hasChanges) {
+      Object.entries(queryParamMappings).forEach(([param, value]) => {
+        url.searchParams.set(param, value);
+      });
+
+      await chrome.tabs.update(tab.id, { url: url.toString() });
+    }
+  });
 });
