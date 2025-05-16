@@ -8,12 +8,15 @@
   --spacing-lg: 16px;
   --border-color: #ccc;
   --radius: 4px;
- }
+}
 
 body {
   min-width: 300px;
   padding: var(--spacing-md);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 .preferences-form {
@@ -44,7 +47,6 @@ body {
   display: none;
 }
 
-
 .picker-item {
   padding: var(--spacing-md);
   cursor: pointer;
@@ -55,7 +57,6 @@ body {
 
 .picker-item:hover {
   background: #f8f9fa;
-
 }
 
 .picker-item.selected {

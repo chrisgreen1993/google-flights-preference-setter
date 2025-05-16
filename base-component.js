@@ -1,5 +1,3 @@
-
-
 export class BaseComponent {
   constructor(initalState = {}) {
     this.state = new Proxy(initalState, {
@@ -7,12 +5,11 @@ export class BaseComponent {
         target[prop] = value;
         this.render();
         return true;
-      }
+      },
     });
   }
 
   render() {
-    throw new Error('render() method not implemented');
+    throw new Error("render() method not implemented");
   }
 }
-

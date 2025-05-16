@@ -1,0 +1,15 @@
+{
+  "name": "google-flights-preference-setter",
+  "version": "1.0.0",
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
+}
