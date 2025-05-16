@@ -6,11 +6,11 @@
   "permissions": ["tabs", "storage"],
   "host_permissions": ["*://www.google.com/travel/flights*"],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "src/background.js"
   },
   "action": {
     "default_title": "Google Flights Preference Setter",
-    "default_popup": "popup.html"
+    "default_popup": "src/popup.html"
   },
   "icons": {
     "16": "icons/icon16.png",
