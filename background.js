@@ -6,7 +6,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     const { preferences } = await chrome.storage.sync.get('preferences');
     const { currency = 'USD', language = 'en-US', location = 'US' } = preferences;
 
-
     const url = new URL(tab.url);
     let shouldUpdate = false;
 

@@ -5,50 +5,54 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="container">
     <h1 class="header">Google Flights Preference Setter</h1>
-    <div class="picker">
-      <label class="picker-search-label" for="currency-search">Currency:</label>
-      <input 
-        type="text" 
-        id="currency-search" 
-        placeholder="Search currency..." 
-        autocomplete="off" 
-        class="picker-search"
-      />
-      <ul id="currency-list" class="picker-item-list"></ul>
-    </div>
+    <form id="preferences-form" class="preferences-form">
+      <div class="picker">
+        <input type="hidden" id="currency-code" name="currency-code" />
+        <label class="picker-search-label" for="currency-search">Currency:</label>
+        <input 
+          type="text" 
+          id="currency-search" 
+          placeholder="Search currency..." 
+          autocomplete="off" 
+          class="picker-search"
+        />
+        <ul id="currency-list" class="picker-item-list"></ul>
+      </div>
 
-    <div class="picker">
-      <label class="picker-search-label" for="language-search">Language:</label>
-      <input 
-        type="text" 
-        id="language-search" 
-        placeholder="Search language..." 
-        autocomplete="off" 
-        class="picker-search"
-      />
-      <ul id="language-list" class="picker-item-list"></ul>
-    </div>
+      <div class="picker">
+        <input type="hidden" id="language-code" name="language-code" />
+        <label class="picker-search-label" for="language-search">Language:</label>
+        <input 
+          type="text" 
+          id="language-search" 
+          placeholder="Search language..." 
+          autocomplete="off" 
+          class="picker-search"
+        />
+        <ul id="language-list" class="picker-item-list"></ul>
+      </div>
 
-    <div class="picker">
-      <label class="picker-search-label" for="location-search">Location:</label>
-      <input 
-        type="text" 
-        id="location-search" 
-        placeholder="Search location..." 
-        autocomplete="off" 
-        class="picker-search"
-      />
-      <ul id="location-list" class="picker-item-list"></ul>
-    </div>
+      <div class="picker">
+        <input type="hidden" id="location-code" name="location-code" />
+        <label class="picker-search-label" for="location-search">Location:</label>
+        <input 
+          type="text" 
+          id="location-search" 
+          placeholder="Search location..." 
+          autocomplete="off" 
+          class="picker-search"
+        />
+        <ul id="location-list" class="picker-item-list"></ul>
+      </div>
 
-    <button id="save-button" class="button">Save</button>
+      <button type="submit" class="button">Save</button>
+    </form>
   </div>
 
 
   <template id="picker-item-template">
-    <li class="picker-item" data-code="">
+    <li class="picker-item">
     </li>
   </template>
 

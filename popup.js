@@ -5,21 +5,21 @@ import locations from './locations.js';
 
 
 class Picker extends BaseComponent {
-  constructor({ type, items, selectedCode, onSelect }) {
+  constructor({ type, items, selectedCode }) {
     const item = items.find(i => i.code === selectedCode) || items[0];
     super({
       search: `${item.name} (${item.code})`,
       isOpen: false,
+      selectedCode: selectedCode
     })
 
     this.items = items;
-    this.onSelect = onSelect;
-    this.selectedCode = selectedCode;
 
     this.elements = {
       search: document.getElementById(`${type}-search`),
       list: document.getElementById(`${type}-list`),
-      template: document.getElementById('picker-item-template')
+      template: document.getElementById('picker-item-template'),
+      codeInput: document.getElementById(`${type}-code`),
     };
 
     this.bindEvents();
@@ -55,7 +55,6 @@ class Picker extends BaseComponent {
     const element = this.elements.template.content.cloneNode(true);
     const li = element.querySelector('li');
     
-    li.dataset.code = item.code;
     li.textContent = `${item.name} (${item.code})`;
     
     if (item.code === this.selectedCode) {
@@ -71,11 +70,12 @@ class Picker extends BaseComponent {
 
   select(item) {
     this.state.search = `${item.name} (${item.code})`;
-    this.onSelect(item.code);
+    this.state.selectedCode = item.code;
   }
 
   render() {
     this.elements.search.value = this.state.search;
+    this.elements.codeInput.value = this.state.selectedCode;
     this.elements.list.innerHTML = '';
     if (!this.state.isOpen) {
       return;
@@ -92,46 +92,38 @@ class Picker extends BaseComponent {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const { preferences = {} } = await chrome.storage.sync.get('preferences');
-  let currentCurrency = preferences.currency || 'USD';
-  let currentLanguage = preferences.language || 'en-US';
-  let currentLocation = preferences.location || 'US';
 
   new Picker({
-    selectedCode: currentCurrency,
+    selectedCode: preferences.currency || 'USD',
     type: 'currency',
     items: currencies,
-    onSelect: (code) => {
-      currentCurrency = code;
-    }
+
   }).render();
 
   new Picker({
-    selectedCode: currentLanguage, 
+    selectedCode: preferences.language || 'en-US', 
     type: 'language',
     items: languages,
-    onSelect: (code) => {
-      currentLanguage = code;
-    }
   }).render();
 
   new Picker({
-    selectedCode: currentLocation,
+    selectedCode: preferences.location || 'US',
     type: 'location',
     items: locations,
-    onSelect: (code) => {
-      currentLocation = code;
-    }
+
   }).render();
 
-  const saveButton = document.getElementById('save-button');
-  saveButton.addEventListener('click', async () => {
+  const form = document.getElementById('preferences-form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
 
     const preferences = {
-      currency: currentCurrency,
-      language: currentLanguage,
-      location: currentLocation
+      currency: formData.get('currency-code'),
+      language: formData.get('language-code'),
+      location: formData.get('location-code')
     };
-
+    
     await chrome.storage.sync.set({ preferences });
 
     const tabs = await chrome.tabs.query({});
