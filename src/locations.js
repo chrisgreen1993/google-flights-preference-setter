@@ -1,3 +1,4 @@
+// These have been extracted from the location selector on the Google Flights website.
 export default [
   {
     name: "Afghanistan",

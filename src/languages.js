@@ -1,3 +1,4 @@
+// These have been extracted from the language selector on the Google Flights website.
 export default [
   {
     name: "Afrikaans",
