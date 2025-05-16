@@ -1,7 +1,7 @@
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
   if (namespace !== "sync" || !changes.preferences) return;
 
-  const { preferences } = changes;
+  const { preferences = {} } = changes;
   const {
     currency = "USD",
     language = "en-US",
