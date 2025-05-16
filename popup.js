@@ -1,6 +1,7 @@
 import { BaseComponent } from './base-component.js';
 import currencies from './currencies.js';
 import languages from './languages.js';
+import locations from './locations.js';
 
 
 class Picker extends BaseComponent {
@@ -81,7 +82,6 @@ class Picker extends BaseComponent {
   }
 
   render() {
-    console.log('render', this.state);
     this.elements.search.value = this.state.search;
     this.elements.list.innerHTML = '';
     if (!this.state.isOpen) {
@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const { preferences = {} } = await chrome.storage.sync.get('preferences');
   let currentCurrency = preferences.currency || 'USD';
   let currentLanguage = preferences.language || 'en-US';
+  let currentLocation = preferences.location || 'US';
 
   new Picker({
     selectedCode: currentCurrency,
@@ -120,12 +121,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   })
 
+  new Picker({
+    selectedCode: currentLocation,
+    type: 'location',
+    items: locations,
+    onSelect: (code) => {
+      currentLocation = code;
+    }
+  });
+
   const saveButton = document.getElementById('save-button');
   saveButton.addEventListener('click', async () => {
 
     const preferences = {
       currency: currentCurrency,
-      language: currentLanguage
+      language: currentLanguage,
+      location: currentLocation
     };
 
     await chrome.storage.sync.set({ preferences });
