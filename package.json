@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "zip-extension": "./zip-extension.sh"
   },
   "keywords": [],
   "author": "",
