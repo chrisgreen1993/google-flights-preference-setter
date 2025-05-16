@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Google Flights Preference Setter",
-  "version": "1.0",
+  "version": "0.0.1",
   "description": "Saves currency, language and location preferences for Google Flights.",
   "permissions": ["tabs", "storage"],
   "host_permissions": ["*://www.google.com/travel/flights*"],
