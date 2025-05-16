@@ -6,8 +6,9 @@ import locations from './locations.js';
 
 class Picker extends BaseComponent {
   constructor({ type, items, selectedCode, onSelect }) {
+    const item = items.find(i => i.code === selectedCode) || items[0];
     super({
-      search: '',
+      search: `${item.name} (${item.code})`,
       isOpen: false,
     })
 
@@ -22,14 +23,6 @@ class Picker extends BaseComponent {
     };
 
     this.bindEvents();
-
-
-    if (selectedCode) {
-      const item = this.items.find(i => i.code === selectedCode);
-      if (item) {
-        this.select(item);
-      }
-    }
   }
 
   get filteredItems() {
@@ -110,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     onSelect: (code) => {
       currentCurrency = code;
     }
-  });
+  }).render();
 
   new Picker({
     selectedCode: currentLanguage, 
@@ -119,7 +112,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     onSelect: (code) => {
       currentLanguage = code;
     }
-  })
+  }).render();
 
   new Picker({
     selectedCode: currentLocation,
@@ -128,7 +121,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     onSelect: (code) => {
       currentLocation = code;
     }
-  });
+  }).render();
 
   const saveButton = document.getElementById('save-button');
   saveButton.addEventListener('click', async () => {
