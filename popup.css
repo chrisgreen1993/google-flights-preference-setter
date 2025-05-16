@@ -16,14 +16,20 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
 }
 
-.currency-picker {
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.picker {
   position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
 }
 
-.currency-list {
+.picker-item-list {
   max-height: 200px;
   overflow: auto;
   border: 1px solid var(--border-color);
@@ -34,12 +40,12 @@ body {
   background: white;
 }
 
-.currency-list:empty {
+.picker-item-list:empty {
   display: none;
 }
 
 
-.currency-item {
+.picker-item {
   padding: var(--spacing-md);
   cursor: pointer;
   border-radius: var(--radius);
@@ -47,30 +53,30 @@ body {
   margin-bottom: 2px;
 }
 
-.currency-item:hover {
+.picker-item:hover {
   background: #f8f9fa;
 
 }
 
-.currency-item.selected {
+.picker-item.selected {
   background: #e8f0fe;
   color: var(--primary-color);
 }
 
-.currency-search {
+.picker-search {
   padding: 8px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   font-size: var(--font-size-md);
 }
 
-.currency-search:focus {
+.picker-search:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 1px var(--primary-color);
 }
 
-.currency-search-label {
+.picker-search-label {
   margin-bottom: var(--spacing-sm);
   font-size: var(--font-size-md);
   color: var(--text-color);
@@ -100,7 +106,7 @@ body {
   font-size: var(--font-size-lg);
   font-weight: 500;
   margin-top: 0;
-  margin-bottom: calc(var(--spacing-lg));
+  margin-bottom: calc(var(--spacing-md));
   padding-bottom: var(--spacing-md);
   border-bottom: 1px solid var(--border-color);
 }

@@ -11,11 +11,5 @@
   "action": {
     "default_title": "Google Flights Preference Setter",
     "default_popup": "popup.html"
-  },
-  "web_accessible_resources": [
-    {
-      "resources": ["currencies.js"],
-      "matches": ["<all_urls>"]
-    }
-  ]
+  }
 }

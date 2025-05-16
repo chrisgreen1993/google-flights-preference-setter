@@ -1,26 +1,39 @@
+import { BaseComponent } from './base-component.js';
 import currencies from './currencies.js';
+import languages from './languages.js';
 
-class CurrencyPicker {
-  constructor() {
-    this.state = {
+
+class Picker extends BaseComponent {
+  constructor({ type, items, selectedCode, onSelect }) {
+    super({
       search: '',
-      selectedCode: null,
-    };
+      isOpen: false,
+    })
+
+    this.items = items;
+    this.onSelect = onSelect;
+    this.selectedCode = selectedCode;
 
     this.elements = {
-      search: document.getElementById('currency-search'),
-      list: document.getElementById('currency-list'),
-      saveButton: document.getElementById('save-button'),
-      template: document.getElementById('currency-item-template')
+      search: document.getElementById(`${type}-search`),
+      list: document.getElementById(`${type}-list`),
+      template: document.getElementById('picker-item-template')
     };
 
     this.bindEvents();
-    this.loadSavedPreference();
+
+
+    if (selectedCode) {
+      const item = this.items.find(i => i.code === selectedCode);
+      if (item) {
+        this.select(item);
+      }
+    }
   }
 
-  get filteredCurrencies() {
+  get filteredItems() {
     const filter = this.state.search.toLowerCase();
-    return currencies.filter(c => 
+    return this.items.filter(c => 
       c.code.toLowerCase().includes(filter) ||
       c.name.toLowerCase().includes(filter)
     );
@@ -29,65 +42,93 @@ class CurrencyPicker {
   bindEvents() {
     this.elements.search.addEventListener('input', () => {
       this.state.search = this.elements.search.value;
-      this.render();
     });
 
-    this.elements.saveButton.addEventListener('click', () => this.saveCurrency());
+    this.elements.search.addEventListener('focus', () => {
+      this.state.isOpen = true;
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!this.elements.list.contains(e.target) && 
+          !this.elements.search.contains(e.target)) {
+        this.state.isOpen = false;
+      }
+    });
+   
   }
 
-  createCurrencyItem(currency) {
-    const item = this.elements.template.content.cloneNode(true);
-    const li = item.querySelector('li');
+  createListItem(item) {
+    const element = this.elements.template.content.cloneNode(true);
+    const li = element.querySelector('li');
     
-    li.dataset.code = currency.code;
-    li.querySelector('.currency-name').textContent = currency.name;
-    li.querySelector('.currency-code').textContent = currency.code;
+    li.dataset.code = item.code;
+    li.textContent = `${item.name} (${item.code})`;
     
-    if (currency.code === this.state.selectedCode) {
+    if (item.code === this.selectedCode) {
       li.classList.add('selected');
     }
 
     li.addEventListener('click', () => {
-      this.selectCurrency(currency);
+      this.select(item);
     });
 
-    return item;
+    return element;
   }
 
-  selectCurrency(currency) {
-    this.state.selectedCode = currency.code;
-    this.state.search = `${currency.name} (${currency.code})`;
-    this.render();
+  select(item) {
+    this.state.search = `${item.name} (${item.code})`;
+    this.onSelect(item.code);
   }
 
   render() {
+    console.log('render', this.state);
     this.elements.search.value = this.state.search;
     this.elements.list.innerHTML = '';
+    if (!this.state.isOpen) {
+      return;
+    }
     const fragment = document.createDocumentFragment();
     
-    this.filteredCurrencies.forEach(currency => {
-      fragment.appendChild(this.createCurrencyItem(currency));
+    this.filteredItems.forEach(item => {
+      fragment.appendChild(this.createListItem(item));
     });
     
     this.elements.list.appendChild(fragment);
   }
+}
 
-  async loadSavedPreference() {
-    const { preferredCurrency } = await chrome.storage.sync.get('preferredCurrency');
-    if (preferredCurrency) {
-      const currency = currencies.find(c => c.code === preferredCurrency);
-      if (currency) {
-        this.selectCurrency(currency);
-      }
+document.addEventListener('DOMContentLoaded', async () => {
+  const { preferences = {} } = await chrome.storage.sync.get('preferences');
+  let currentCurrency = preferences.currency || 'USD';
+  let currentLanguage = preferences.language || 'en-US';
+
+  new Picker({
+    selectedCode: currentCurrency,
+    type: 'currency',
+    items: currencies,
+    onSelect: (code) => {
+      currentCurrency = code;
     }
-  }
+  });
 
-  async saveCurrency() {
-    if (!this.state.selectedCode) return;
-    
-    await chrome.storage.sync.set({ 
-      preferredCurrency: this.state.selectedCode 
-    });
+  new Picker({
+    selectedCode: currentLanguage, 
+    type: 'language',
+    items: languages,
+    onSelect: (code) => {
+      currentLanguage = code;
+    }
+  })
+
+  const saveButton = document.getElementById('save-button');
+  saveButton.addEventListener('click', async () => {
+
+    const preferences = {
+      currency: currentCurrency,
+      language: currentLanguage
+    };
+
+    await chrome.storage.sync.set({ preferences });
 
     const tabs = await chrome.tabs.query({});
     tabs.forEach(tab => {
@@ -95,9 +136,5 @@ class CurrencyPicker {
         chrome.tabs.reload(tab.id);
       }
     });
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  new CurrencyPicker();
+  });
 });

@@ -5,25 +5,38 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <h1 class="header">Google Flights Preference Setter</h1>
+  <div class="container">
+    <h1 class="header">Google Flights Preference Setter</h1>
+    <div class="picker">
+      <label class="picker-search-label" for="currency-search">Currency:</label>
+      <input 
+        type="text" 
+        id="currency-search" 
+        placeholder="Search currency..." 
+        autocomplete="off" 
+        class="picker-search"
+      />
+      <ul id="currency-list" class="picker-item-list"></ul>
+    </div>
 
-  <div class="currency-picker">
-    <label class="currency-search-label" for="currency-search">Currency:</label>
-    <input 
-      type="text" 
-      id="currency-search" 
-      placeholder="Search currency..." 
-      autocomplete="off" 
-      class="currency-search"
-    />
-    <ul id="currency-list" class="currency-list"></ul>
+    <div class="picker">
+      <label class="picker-search-label" for="language-search">Language:</label>
+      <input 
+        type="text" 
+        id="language-search" 
+        placeholder="Search language..." 
+        autocomplete="off" 
+        class="picker-search"
+      />
+      <ul id="language-list" class="picker-item-list"></ul>
+    </div>
+
     <button id="save-button" class="button">Save</button>
   </div>
 
-  <template id="currency-item-template">
-    <li class="currency-item" data-code="">
-      <span class="currency-name"></span>
-      (<span class="currency-code"></span>)
+
+  <template id="picker-item-template">
+    <li class="picker-item" data-code="">
     </li>
   </template>
 
