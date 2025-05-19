@@ -1,5 +1,4 @@
-// THese have been extracted from the currency selector on the Google Flights website.
-
+// These have been extracted from the currency selector on the Google Flights website.
 export default [
   {
     name: "Albanian Lek",

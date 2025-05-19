@@ -7,7 +7,7 @@ A Chrome extension that lets you set your preferred currency, language, and loca
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/google-flights-preference-setter.git
+   git clone https://github.com/chrisgreen1993/google-flights-preference-setter.git
    cd google-flights-preference-setter
    ```
 
