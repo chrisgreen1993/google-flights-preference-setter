@@ -19,6 +19,7 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
   });
 
   tabs.forEach(async (tab) => {
+    if (!tab.url || !tab.id) return;
     const url = new URL(tab.url);
 
     const hasChanges = Object.entries(queryParamMappings).some(

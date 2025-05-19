@@ -1,10 +1,37 @@
-import { BaseComponent } from "./base-component.js";
-import currencies from "./currencies.js";
-import languages from "./languages.js";
-import locations from "./locations.js";
+import { BaseComponent } from "./base-component";
+import currencies from "./currencies";
+import languages from "./languages";
+import locations from "./locations";
 
-class Picker extends BaseComponent {
-  constructor({ type, items, selectedCode }) {
+interface PickerState {
+  search: string;
+  isOpen: boolean;
+  selectedCode: string;
+}
+
+interface PickerItem {
+  name: string;
+  code: string;
+}
+
+interface PickerOptions {
+  type: string;
+  items: PickerItem[];
+  selectedCode: string;
+}
+
+interface PickerElements {
+  search: HTMLInputElement;
+  list: HTMLUListElement;
+  template: HTMLTemplateElement;
+  codeInput: HTMLInputElement;
+}
+
+class Picker extends BaseComponent<PickerState> {
+  items: PickerItem[];
+  elements: PickerElements;
+
+  constructor({ type, items, selectedCode }: PickerOptions) {
     const item = items.find((i) => i.code === selectedCode) || items[0];
     super({
       search: `${item.name} (${item.code})`,
@@ -15,10 +42,12 @@ class Picker extends BaseComponent {
     this.items = items;
 
     this.elements = {
-      search: document.getElementById(`${type}-search`),
-      list: document.getElementById(`${type}-list`),
-      template: document.getElementById("picker-item-template"),
-      codeInput: document.getElementById(`${type}-code`),
+      search: document.getElementById(`${type}-search`) as HTMLInputElement,
+      list: document.getElementById(`${type}-list`) as HTMLUListElement,
+      template: document.getElementById(
+        "picker-item-template",
+      ) as HTMLTemplateElement,
+      codeInput: document.getElementById(`${type}-code`) as HTMLInputElement,
     };
 
     this.bindEvents();
@@ -43,35 +72,34 @@ class Picker extends BaseComponent {
     });
 
     document.addEventListener("click", (e) => {
+      const target = e.target as Node;
       if (
-        !this.elements.list.contains(e.target) &&
-        !this.elements.search.contains(e.target)
+        !this.elements.list.contains(target) &&
+        !this.elements.search.contains(target)
       ) {
         this.state.isOpen = false;
       }
     });
   }
 
-  createListItem(item) {
-    const element = this.elements.template.content.cloneNode(true);
-    const li = element.querySelector("li");
+  createListItem(item: PickerItem) {
+    const element = this.elements.template.content.cloneNode(
+      true,
+    ) as DocumentFragment;
+    const li = element.querySelector("li") as HTMLLIElement;
 
     li.textContent = `${item.name} (${item.code})`;
 
-    if (item.code === this.selectedCode) {
+    if (item.code === this.state.selectedCode) {
       li.classList.add("selected");
     }
 
     li.addEventListener("click", () => {
-      this.select(item);
+      this.state.search = `${item.name} (${item.code})`;
+      this.state.selectedCode = item.code;
     });
 
     return element;
-  }
-
-  select(item) {
-    this.state.search = `${item.name} (${item.code})`;
-    this.state.selectedCode = item.code;
   }
 
   render() {
@@ -112,7 +140,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     items: locations,
   }).render();
 
-  const form = document.getElementById("preferences-form");
+  const form = document.getElementById("preferences-form") as HTMLFormElement;
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(form);

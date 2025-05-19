@@ -2,15 +2,22 @@
   "name": "google-flights-preference-setter",
   "version": "1.0.0",
   "scripts": {
+    "dev": "vite",
+    "build": "npm run check-types && vite build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "zip-extension": "./zip-extension.sh"
+    "release": "npm run build && ./pack-extension.sh",
+    "check-types": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "prettier": "^3.5.3"
+    "@crxjs/vite-plugin": "^2.0.0-beta.33",
+    "@types/chrome": "^0.0.323",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
   }
 }
