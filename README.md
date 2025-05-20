@@ -4,37 +4,26 @@ A Chrome extension that lets you set your preferred currency, language, and loca
 
 ## Setup & Development
 
-1. **Clone the repository:**
+```bash
+git clone https://github.com/chrisgreen1993/google-flights-preference-setter.git
+cd google-flights-preference-setter
 
-   ```bash
-   git clone https://github.com/chrisgreen1993/google-flights-preference-setter.git
-   cd google-flights-preference-setter
-   ```
+npm install
 
-2. **Install dependencies (optional, only used for prettier):**
+npm run dev
+```
 
-   ```bash
-   npm install
-   ```
+- Go to `chrome://extensions`
+- Enable "Developer mode"
+- Click "Load unpacked" and select the project folder
 
-3. **Build the extension zip:**
+## Release
 
-   ```bash
-   ./build.sh
-   ```
+Builds for production and creates a zip file for upload.
 
-   This will create `extension.zip` containing everything needed for upload.
-
-4. **Load the extension in Chrome:**
-   - Go to `chrome://extensions`
-   - Enable "Developer mode"
-   - Click "Load unpacked" and select the project folder
-
-## Development Tips
-
-- Edit files in `src/` for main logic and UI.
-- Run `npm run format` to auto-format code with Prettier.
-- Use the build script to package your extension for the Chrome Web Store.
+```bash
+npm run release
+```
 
 ## License
 
