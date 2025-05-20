@@ -1,4 +1,4 @@
-export class BaseComponent<State extends Record<string, any>> {
+export class BaseComponent<State extends object> {
   state: State;
 
   constructor(initalState: State) {
