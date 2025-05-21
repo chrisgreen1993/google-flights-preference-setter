@@ -10,7 +10,10 @@
     "types": ["chrome"],
     "noEmit": true,
     "isolatedModules": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    // These two are needed for Lit decorators: https://lit.dev/docs/components/properties/
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false
   },
   "include": ["src"]
 }
