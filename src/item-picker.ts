@@ -112,9 +112,6 @@ export class ItemPicker extends LitElement {
   }
 
   render() {
-    console.log("Rendering item picker");
-    console.log("selectedCode:", this.selectedCode);
-    console.log("search:", this.search);
     return html`
       <label>${this.label}</label>
       <input

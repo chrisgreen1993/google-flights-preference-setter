@@ -47,7 +47,6 @@ export class PopupRoot extends LitElement {
   private preferencesTask = new Task(this, {
     task: async () => {
       const { preferences = {} } = await chrome.storage.sync.get("preferences");
-      console.log("Loaded preferences:", preferences);
       return preferences;
     },
     args: () => [],
@@ -56,15 +55,12 @@ export class PopupRoot extends LitElement {
   private async handleSubmit(e: Event) {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
-    console.log("Form submitted:", form);
     const formData = new FormData(form);
-    console.log("Form data:", formData);
     const preferences = {
       currency: formData.get("currency-code"),
       language: formData.get("language-code"),
       location: formData.get("location-code"),
     };
-    console.log("Saving preferences:", preferences);
     await chrome.storage.sync.set({ preferences });
   }
 
