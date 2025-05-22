@@ -5,7 +5,7 @@
   "description": "Saves currency, language and location preferences for Google Flights.",
   "permissions": ["tabs", "storage"],
   "host_permissions": [
-    "*://www.google.com/travel/flights*",
+    "*://www.google.com/travel/*",
     "http://localhost:5173/*"
   ],
   "background": {

@@ -31,7 +31,7 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
   const preferences = changes.preferences.newValue;
 
   const tabs = await chrome.tabs.query({
-    url: "https://www.google.com/travel/flights*",
+    url: "https://www.google.com/travel/*",
   });
 
   tabs.forEach(async (tab) => {
@@ -43,7 +43,7 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (
     changeInfo.status === "loading" &&
-    tab.url?.startsWith("https://www.google.com/travel/flights")
+    tab.url?.startsWith("https://www.google.com/travel/")
   ) {
     const { preferences = {} } = await chrome.storage.sync.get("preferences");
     await updateTabUrlWithPreferences(tabId, tab.url, preferences);
