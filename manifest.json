@@ -3,7 +3,12 @@
   "name": "Google Flights Preference Setter",
   "version": "0.0.1",
   "description": "Saves currency, language and location preferences for Google Flights.",
-  "permissions": ["tabs", "storage"],
+  "permissions": [
+    "activeTab",
+    "storage",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess"
+  ],
   "host_permissions": [
     "*://www.google.com/travel/flights*",
     "http://localhost:5173/*"

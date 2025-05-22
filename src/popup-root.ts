@@ -62,6 +62,8 @@ export class PopupRoot extends LitElement {
       location: formData.get("location-code"),
     };
     await chrome.storage.sync.set({ preferences });
+
+    window.close();
   }
 
   render() {
