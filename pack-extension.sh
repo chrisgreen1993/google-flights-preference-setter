@@ -4,8 +4,13 @@ set -e
 
 cd "$(dirname "$0")"
 
-rm -f google-flights-preference-setter.zip
+# Get version from package.json
+VERSION=$(node -p "require('./package.json').version")
 
-zip -r google-flights-preference-setter.zip dist -x "*/\.*" -x "__MACOSX"
+ZIP_NAME="google-flights-preference-setter-v$VERSION.zip"
 
-echo "✅ google-flights-preference-setter.zip created!"
+rm -f "$ZIP_NAME"
+
+zip -r "$ZIP_NAME" dist -x "*/\.*" -x "__MACOSX"
+
+echo "✅ $ZIP_NAME created!"

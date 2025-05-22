@@ -6,7 +6,8 @@
     "build": "npm run check-types && vite build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "release": "npm run build && ./pack-extension.sh",
+    "release": "release-it",
+    "pack-extension": "npm run build && ./pack-extension.sh",
     "check-types": "tsc --noEmit",
     "lint": "eslint ."
   },
