@@ -1,11 +1,13 @@
 import { LitElement, html, css } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import { Task } from "@lit/task";
 import currencies from "./currencies";
 import languages from "./languages";
 import locations from "./locations";
 
 import "./item-picker";
+import "./error-banner";
+import "./primary-button";
 
 @customElement("popup-root")
 export class PopupRoot extends LitElement {
@@ -19,32 +21,24 @@ export class PopupRoot extends LitElement {
       padding-bottom: var(--spacing-md);
       border-bottom: 1px solid var(--border-color);
     }
+
     form {
       display: flex;
       flex-direction: column;
       gap: var(--spacing-lg);
     }
-    button {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      padding: var(--spacing-md) var(--spacing-lg);
-      cursor: pointer;
+
+    .large-text {
+      font-size: var(--font-size-lg);
       font-weight: 500;
-      transition: background-color 0.2s;
-    }
-
-    button:hover {
-      background: color-mix(in srgb, var(--primary-color), black 10%);
-    }
-
-    button:active {
-      background: color-mix(in srgb, var(--primary-color), black 20%);
+      text-align: center;
     }
   `;
 
-  private preferencesTask = new Task(this, {
+  // State to track if any of the form inputs have been touched.
+  @state() private formTouched = false;
+
+  private loadPreferencesTask = new Task(this, {
     task: async () => {
       const { preferences = {} } = await chrome.storage.sync.get("preferences");
       return preferences;
@@ -56,44 +50,79 @@ export class PopupRoot extends LitElement {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const preferences = {
-      currency: formData.get("currency-code"),
-      language: formData.get("language-code"),
-      location: formData.get("location-code"),
-    };
-    await chrome.storage.sync.set({ preferences });
+    this.savePreferencesTask.run([formData]);
+    // Reset form touched state to false after saving
+    this.formTouched = false;
   }
 
+  private handlePickerInput() {
+    this.formTouched = true;
+  }
+
+  private savePreferencesTask = new Task(this, {
+    task: async ([formData]: [FormData]) => {
+      const preferences = {
+        currency: formData.get("currency-code"),
+        language: formData.get("language-code"),
+        location: formData.get("location-code"),
+      };
+
+      await chrome.storage.sync.set({ preferences });
+    },
+    autoRun: false,
+  });
+
   render() {
-    return this.preferencesTask.render({
-      pending: () => html`<p>Loading...</p>`,
-      complete: (preferences) => html`
-        <body>
-          <h1>Google Flights Preference Setter</h1>
+    return html`
+      <h1>Google Flights Preference Setter</h1>
+      ${this.loadPreferencesTask.render({
+        pending: () => html`<p class="large-text">Loading...</p>`,
+        complete: (preferences) => html`
           <form @submit=${this.handleSubmit}>
+            ${this.savePreferencesTask.error &&
+            html`<error-banner>
+              ${(this.savePreferencesTask.error as Error).message}
+            </error-banner>`}
             <item-picker
               name="currency-code"
               label="Currency:"
               .items=${currencies}
               .selectedCode=${preferences.currency || "USD"}
+              @input=${this.handlePickerInput}
             ></item-picker>
             <item-picker
               name="language-code"
               label="Language:"
               .items=${languages}
               .selectedCode=${preferences.language || "en-US"}
+              @input=${this.handlePickerInput}
             ></item-picker>
             <item-picker
               name="location-code"
               label="Location:"
               .items=${locations}
               .selectedCode=${preferences.location || "US"}
+              @input=${this.handlePickerInput}
             ></item-picker>
-            <button type="submit">Save</button>
+            ${this.savePreferencesTask.render({
+              initial: () =>
+                html`<primary-button type="submit">Save</primary-button>`,
+              pending: () =>
+                html` <primary-button type="submit" disabled
+                  >Saving...</primary-button
+                >`,
+              complete: () =>
+                html`<primary-button type="submit">
+                  ${this.formTouched ? "Save" : "Saved!"}
+                </primary-button>`,
+              error: () =>
+                html`<primary-button type="submit">Retry</primary-button>`,
+            })}
           </form>
-        </body>
-      `,
-      error: (error) => html`<p>Error: ${(error as Error).message}</p>`,
-    });
+        `,
+        error: (error) =>
+          html`<p class="large-text">Error: ${(error as Error).message}</p>`,
+      })}
+    `;
   }
 }
