@@ -3,7 +3,7 @@ import packageJson from "./package.json";
 
 export default {
   manifest_version: 3,
-  name: "Google Flights Preference Setter",
+  name: `Google Flights Preference Setter${isDev ? " (dev)" : ""}`,
   version: packageJson.version,
   description:
     "Saves currency, language and location preferences for Google Flights.",
@@ -18,7 +18,7 @@ export default {
     type: "module",
   },
   action: {
-    default_title: "Google Flights Preference Setter",
+    default_title: `Google Flights Preference Setter${isDev ? " (dev)" : ""}`,
     default_popup: "src/popup.html",
   },
   icons: {
