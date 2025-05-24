@@ -10,13 +10,16 @@ Currently this doesn't work with the Hotels and Holiday Rentals pages (`https://
 
 ## Setup & Development
 
+Install [devbox](https://www.jetify.com/devbox)
+
+Optional: Install [direnv](https://direnv.net/) if you'd like devbox to be activated when you enter the project driectory.
+
 ```bash
 git clone https://github.com/chrisgreen1993/google-flights-preference-setter.git
 cd google-flights-preference-setter
 
-npm install
-
-npm run dev
+devbox install
+devbox shell # Don't need to run this if using direnv
 
 # Linting and formatting
 npm run lint
