@@ -1,3 +1,13 @@
+const GOOGLE_TRAVEL_URL = "https://www.google.com/travel/";
+
+const validUrlForPreferences = (url: string) => {
+  return (
+    url.startsWith(GOOGLE_TRAVEL_URL) &&
+    // This redirects to external pages and should not be modified otherwise the url returns 404
+    !url.startsWith(GOOGLE_TRAVEL_URL + "clk")
+  );
+};
+
 async function updateTabUrlWithPreferences(
   tabId: number,
   tabUrl: string,
@@ -31,11 +41,11 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
   const preferences = changes.preferences.newValue;
 
   const tabs = await chrome.tabs.query({
-    url: "https://www.google.com/travel/*",
+    url: `${GOOGLE_TRAVEL_URL}*`,
   });
 
   tabs.forEach(async (tab) => {
-    if (!tab.url || !tab.id) return;
+    if (!tab.url || !tab.id || !validUrlForPreferences(tab.url)) return;
     await updateTabUrlWithPreferences(tab.id, tab.url, preferences);
   });
 });
@@ -43,7 +53,8 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (
     changeInfo.status === "loading" &&
-    tab.url?.startsWith("https://www.google.com/travel/")
+    tab.url &&
+    validUrlForPreferences(tab.url)
   ) {
     const { preferences = {} } = await chrome.storage.sync.get("preferences");
     await updateTabUrlWithPreferences(tabId, tab.url, preferences);
