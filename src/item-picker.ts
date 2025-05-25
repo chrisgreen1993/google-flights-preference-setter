@@ -100,7 +100,7 @@ export class ItemPicker extends LitElement {
     );
   }
 
-  private onSelect(item: PickerItem) {
+  private handleSelect(item: PickerItem) {
     this.selectedCode = item.code;
     this.search = `${item.name} (${item.code})`;
     this.isOpen = false;
@@ -117,7 +117,7 @@ export class ItemPicker extends LitElement {
       <input
         type="text"
         .value=${this.search}
-        placeholder="Search currency..."
+        placeholder="Search..."
         autocomplete="off"
         @input=${(e: Event) => {
           this.search = (e.target as HTMLInputElement).value;
@@ -132,7 +132,7 @@ export class ItemPicker extends LitElement {
                 (item) => html`
                   <li
                     class="${item.code === this.selectedCode ? "selected" : ""}"
-                    @click=${() => this.onSelect(item)}
+                    @click=${() => this.handleSelect(item)}
                   >
                     ${item.name} (${item.code})
                   </li>
