@@ -4,6 +4,8 @@ A Chrome extension that lets you set your preferred currency, language, and loca
 
 Built with TypeScript & [Lit](https://lit.dev/)
 
+You can find the extension on the [Chrome Web Store](https://chromewebstore.google.com/detail/google-flights-preference/moilooahahpdhikmgnakmpojippjakif)
+
 ## Limitations
 
 Currently this doesn't work with the Hotels and Holiday Rentals pages (`https://www.google.com/travel/search`) as they use a different mechanism to set the preferences.
